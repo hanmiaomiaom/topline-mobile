@@ -1,0 +1,30 @@
+import axios from 'axios'
+/**
+ * axios.create 用于创建一个axios实例，该实例和axios 的功能是一模一样的
+ * 说白了就是克隆一个axios
+ * 为什么这样做：我们可以拥有多个不同的请求函数，而他们的配置可能是不一样的，
+ * 例如：有些项目中可能会涉及到使用不同的接口路径
+ * http://a.com
+ * http://b.com
+ */
+const request = axios.create({
+  baseURL: 'http://toutiao.course.itcast.cn'
+})
+// 添加请求拦截器
+request.interceptors.request.use(function (config) {
+  // 在发送请求之前做些什么
+  return config
+}, function (error) {
+  // 对请求错误做些什么
+  return Promise.reject(error)
+})
+
+// 添加响应拦截器
+request.interceptors.response.use(function (response) {
+  // 对响应数据做点什么
+  return response
+}, function (error) {
+  // 对响应错误做点什么
+  return Promise.reject(error)
+})
+export default request
