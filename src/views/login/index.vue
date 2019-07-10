@@ -13,6 +13,7 @@
                   clearable
                   label="手机号"
                   placeholder="请输入手机号"
+                  :error-message="errors.mobile"
                 />
                <van-cell-group>
                   <van-field
@@ -21,8 +22,12 @@
                     clearable
                     label="短信验证码"
                     placeholder="请输入短信验证码"
+                   :error-message="errors.code"
                   >
-                    <van-button slot="button" size="small" type="primary">发送验证码</van-button>
+                    <van-button
+                    slot="button"
+                    size="small"
+                    type="primary">发送验证码</van-button>
                   </van-field>
                 </van-cell-group>
               </van-cell-group>
@@ -49,14 +54,33 @@ export default {
         mobile: '18531151201',
         code: '123456'
       },
-      loginLoading: false // 控制登录按钮的 loading 状态
+      loginLoading: false, // 控制登录按钮的 loading 状态
+      errors: {
+        mobile: '',
+        code: ''
+      }
     }
   },
   methods: {
     async handleLogin () {
-      this.loginLoading = true
       try {
-        // 登陆成功后要做的事情
+        // 发送请求之前，校验表单数据，校验通过，才能进行登录
+        const { mobile, code } = this.user
+        const errors = this.errors
+        if (mobile.length) {
+          errors.mobile = ''
+        } else {
+          errors.mobile = '手机号不能为空'
+          return
+        }
+        if (code.length) {
+          errors.code = ''
+        } else {
+          errors.code = '验证码不能为空'
+          return
+        }
+        // 表单验证通过后，发送请求，loading加载
+        this.loginLoading = true
         const data = await login(this.user)
         // 登录成功后，提交mutation完成对状态的修改
         this.$store.commit('setUser', data)
@@ -72,6 +96,7 @@ export default {
       }
       this.loginLoading = false
     }
+
   }
 }
 </script>
