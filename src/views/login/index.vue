@@ -30,6 +30,8 @@
                 <van-button
                 class="login-btn"
                 type="info"
+                :loading="loginLoading"
+                loading-text="登录中..."
                 @click.prevent = "handleLogin"
                 >登录</van-button>
               </div>
@@ -43,17 +45,20 @@ export default {
   name: 'App',
   data () {
     return {
-      user: {
+      user: {// 提交登录的表单数据
         mobile: '18531151201',
         code: '123456'
-      }
+      },
+      loginLoading: false // 控制登录按钮的 loading 状态
     }
   },
   methods: {
     async handleLogin () {
+      this.loginLoading = true
       try {
         // 登陆成功后要做的事情
         const data = await login(this.user)
+        // 登录成功后，提交mutation完成对状态的修改
         this.$store.commit('setUser', data)
         /**
          * 这里先简单粗暴的跳转到首页
@@ -65,6 +70,7 @@ export default {
       } catch (err) {
         console.log('登录失败', err)
       }
+      this.loginLoading = false
     }
   }
 }
