@@ -22,7 +22,9 @@ request.interceptors.request.use(function (config) {
 // 添加响应拦截器
 request.interceptors.response.use(function (response) {
   // 对响应数据做点什么
-  return response
+  // 如果响应结果对象中有data，则直接返回这个data数据
+  // 如果响应结果对象中没有data，则不作任何处理，直接原样返回这个数据
+  return response.data.data || response.data
 }, function (error) {
   // 对响应错误做点什么
   return Promise.reject(error)
